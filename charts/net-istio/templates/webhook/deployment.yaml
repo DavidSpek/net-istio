@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "net-istio.fullname" . }}-net-istio-webhook
+  labels:
+    {{- include "net-istio.labels" . | nindent 4 }}
+    {{- include "net-istio.webhookSelectorLabels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+    {{- include "net-istio.selectorLabels" . | nindent 6 }}
+    {{- include "net-istio.webhookSelectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+      {{- include "net-istio.selectorLabels" . | nindent 8 }}
+      {{- include "net-istio.webhookSelectorLabels" . | nindent 8 }}
+      annotations:
+        {{- with .Values.webhook.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      containers:
+      - env:
+        - name: SYSTEM_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: CONFIG_LOGGING_NAME
+          value: {{ quote .Values.global.config.configLoggingName }}
+        - name: CONFIG_OBSERVABILITY_NAME
+          value: {{ quote .Values.global.config.configObservabilityName }}
+        - name: METRICS_DOMAIN
+          value: {{ quote .Values.global.config.metricsDomain }}
+        - name: WEBHOOK_NAME
+          value: "net-istio-webhook"
+        - name: WEBHOOK_PORT
+          value: "8443"
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ quote .Values.kubernetesClusterDomain }}
+        {{- with .Values.webhook.extraEnv }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        image: {{ .Values.webhook.image.repository }}:{{ .Values.webhook.image.tag | default .Chart.AppVersion }}{{- if .Values.webhook.image.digest }}@{{ .Values.webhook.image.digest }}{{- end }}
+        imagePullPolicy: {{ .Values.webhook.image.pullPolicy }}
+        livenessProbe:
+          failureThreshold: 6
+          httpGet:
+            httpHeaders:
+            - name: k-kubelet-probe
+              value: webhook
+            port: 8443
+            scheme: HTTPS
+          initialDelaySeconds: 20
+          periodSeconds: 1
+        name: webhook
+        ports:
+        - containerPort: 9090
+          name: metrics
+        - containerPort: 8008
+          name: profiling
+        - containerPort: 8443
+          name: https-webhook
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            httpHeaders:
+            - name: k-kubelet-probe
+              value: webhook
+            port: 8443
+            scheme: HTTPS
+          periodSeconds: 1
+        resources: {{- toYaml .Values.webhook.resources | nindent 10 }}
+        securityContext: {{- toYaml .Values.webhook.containerSecurityContext | nindent 10 }}
+      imagePullSecrets: {{ .Values.imagePullSecrets | default list | toJson }}
+      serviceAccountName: {{ include "net-istio.serviceAccountName" . }}
+      {{- with .Values.controller.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.controller.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.controller.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.controller.topologySpreadConstraints }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
