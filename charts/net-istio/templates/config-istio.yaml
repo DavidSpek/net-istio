@@ -9,5 +9,7 @@ data:
   {{- $example := pick .Values.configIstio.data "_example" -}}
   {{- $sanitized := omit .Values.configIstio.data "_example" -}}
   {{- toYaml $example | nindent 2 }}
+  {{- if $sanitized }}
   {{- tpl (toYaml $sanitized) . | nindent 2 }}
+  {{- end }}
 {{- end }}
