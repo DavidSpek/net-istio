@@ -40,7 +40,6 @@ helm.sh/chart: {{ include "net-istio.chart" . }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
-app.kubernetes.io/component: net-istio
 networking.knative.dev/ingress-provider: istio
 {{- end }}
 

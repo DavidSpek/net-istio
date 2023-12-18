@@ -146,10 +146,15 @@ configIstio:
       # will search for the local gateway in the serving system namespace
       # `knative-serving`
       local-gateway.knative-serving.knative-local-gateway: "knative-local-gateway.istio-system.svc.cluster.local"
+    gateway.{{ .Release.Namespace }}.{{ .Values.istio.ingressGateway.name }}: "istio-ingressgateway.{{ .Values.istio.namespace }}.svc.{{ .Values.kubernetesClusterDomain }}"
+    local-gateway.{{ .Release.Namespace }}.{{ .Values.istio.localGateway.name }}: "{{ .Values.istio.localGateway.name }}.{{ .Values.istio.namespace }}.svc.{{ .Values.kubernetesClusterDomain }}"
 
 istio:
+  # the namespace where istio runs
+  namespace: istio-system
   ingressGateway:
     create: true
+    name: knative-ingress-gateway
     selector:
       istio: ingressgateway
     servers:
@@ -161,8 +166,9 @@ istio:
         protocol: HTTP
   localGateway:
     create: true
+    name: knative-local-gateway
     selector:
-      istio: localgateway
+      istio: ingressgateway
     servers:
     - hosts:
       - '*'

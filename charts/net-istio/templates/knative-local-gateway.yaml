@@ -2,24 +2,25 @@
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
-  name: knative-local-gateway
+  name: {{ .Values.istio.localGateway.name }}
   labels:
   {{- include "net-istio.labels" . | nindent 4 }}
 spec:
   {{- with .Values.istio.localGateway.selector }}
   selector:
-    {{ toYaml . | nindent 4 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- with .Values.istio.localGateway.servers }}
   servers:
-  {{ toYaml . | nindent 2 }}
+  {{- toYaml . | nindent 2 }}
   {{- end }}
-{{- if .Values.istio.localGateway.service.create -}}
+{{- if .Values.istio.localGateway.service.create }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: knative-local-gateway
+  namespace: {{ .Values.istio.namespace }}
   labels:
     experimental.istio.io/disable-gateway-port-translation: "true"
   {{- include "net-istio.labels" . | nindent 4 }}
@@ -27,9 +28,8 @@ spec:
   type: {{ .Values.istio.localGateway.service.type }}
   {{- with .Values.istio.localGateway.selector }}
   selector:
-    {{ toYaml . | nindent 4 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- include "net-istio.selectorLabels" . | nindent 4 }}
   ports:
 	{{- .Values.istio.localGateway.service.ports | toYaml | nindent 2 }}
 {{- end }}

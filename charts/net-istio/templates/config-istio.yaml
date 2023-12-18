@@ -5,8 +5,9 @@ metadata:
   name: config-istio
   labels:
     {{- include "net-istio.labels" . | nindent 4 }}
-{{- with .Values.configIstio.data }}
 data:
-  {{- toYaml . | nindent 2 }}
-{{- end }}
+  {{- $example := pick .Values.configIstio.data "_example" -}}
+  {{- $sanitized := omit .Values.configIstio.data "_example" -}}
+  {{- toYaml $example | nindent 2 }}
+  {{- tpl (toYaml $sanitized) . | nindent 2 }}
 {{- end }}
