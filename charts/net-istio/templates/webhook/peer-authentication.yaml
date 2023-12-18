@@ -1,0 +1,14 @@
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: {{ include "net-istio.fullname" . }}-webhook
+  labels:
+  {{- include "net-istio.labels" . | nindent 4 }}
+spec:
+  portLevelMtls:
+    "8443":
+      mode: PERMISSIVE
+  selector:
+    matchLabels:
+      {{- include "net-istio.selectorLabels" . | nindent 8 }}
+      {{- include "net-istio.webhookSelectorLabels" . | nindent 8 }}

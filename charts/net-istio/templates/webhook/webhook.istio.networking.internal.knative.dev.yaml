@@ -1,0 +1,21 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: {{ include "net-istio.fullname" . }}-webhook.istio.networking.internal.knative.dev
+  labels:
+  {{- include "net-istio.labels" . | nindent 4 }}
+webhooks:
+- admissionReviewVersions:
+  - v1
+  - v1beta1
+  clientConfig:
+    service:
+      name: {{ include "net-istio.fullname" . }}-webhook
+      namespace: {{ .Release.Namespace }}
+  failurePolicy: Fail
+  name: webhook.istio.networking.internal.knative.dev
+  objectSelector:
+    matchExpressions:
+    - key: serving.knative.dev/configuration
+      operator: Exists
+  sideEffects: None

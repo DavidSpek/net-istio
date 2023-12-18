@@ -1,0 +1,17 @@
+{{- if .Values.istio.ingressGateway.create -}}
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: knative-ingress-gateway
+  labels:
+  {{- include "net-istio.labels" . | nindent 4 }}
+spec:
+  {{- with .Values.istio.ingressGateway.selector }}
+  selector:
+    {{ toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.istio.ingressGateway.servers }}
+  servers:
+  {{ toYaml . | nindent 2 }}
+  {{- end }}
+{{- end }}

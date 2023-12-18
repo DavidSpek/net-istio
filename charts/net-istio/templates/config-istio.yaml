@@ -1,0 +1,12 @@
+{{- if .Values.configIstio.configMap.create -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-istio
+  labels:
+    {{- include "net-istio.labels" . | nindent 4 }}
+{{- with .Values.configIstio.data }}
+data:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
+{{- end }}
