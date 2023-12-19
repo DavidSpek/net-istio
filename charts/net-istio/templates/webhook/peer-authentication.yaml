@@ -1,7 +1,7 @@
 apiVersion: security.istio.io/v1beta1
 kind: PeerAuthentication
 metadata:
-  name: {{ include "net-istio.fullname" . }}-webhook
+  name: net-istio-webhook
   labels:
   {{- include "net-istio.labels" . | nindent 4 }}
 spec:
