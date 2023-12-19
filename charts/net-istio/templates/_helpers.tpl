@@ -71,9 +71,5 @@ app: net-istio-webhook
 Create the name of the service account to use
 */}}
 {{- define "net-istio.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "net-istio.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccount.name }}
-{{- end }}
+{{- default "controller" .Values.serviceAccount.name }}
 {{- end }}
