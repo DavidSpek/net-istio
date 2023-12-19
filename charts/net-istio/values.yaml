@@ -23,7 +23,7 @@ controller:
   image:
     repository: gcr.io/knative-releases/knative.dev/net-istio/cmd/controller
     tag: ""
-    digest: sha256:27e7beb7c62036216fc464fb2181e56b030158ad4ceb57a7de172f54b4fe43db
+    digest: sha256:53b28cc099b7e2357513e9643c029b200eb6b8c7eb2279961c7e79b677a8a2b7
     pullPolicy: IfNotPresent
 
   extraEnv:
@@ -62,7 +62,7 @@ webhook:
   image:
     repository: gcr.io/knative-releases/knative.dev/net-istio/cmd/webhook
     tag: ""
-    digest: sha256:0cdef272e39c57971ce9977765f164dd8e3abb9395a4f60e7a4160d57dcc09f2
+    digest: sha256:90083eb29e6ab29a352fbf606257ca397e4039acb12f7c08152dc1e409e5ce50
     pullPolicy: IfNotPresent
 
   extraEnv: []

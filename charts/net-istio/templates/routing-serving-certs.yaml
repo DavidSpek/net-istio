@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: routing-serving-certs
+  namespace: {{ .Values.istio.namespace }}
+  labels:
+    serving-certs-ctrl: "data-plane-routing"
+    networking.internal.knative.dev/certificate-uid: "serving-certs"
+  {{- include "net-istio.labels" . | nindent 4 }}
