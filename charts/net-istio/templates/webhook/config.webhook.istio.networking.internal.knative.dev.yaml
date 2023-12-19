@@ -1,7 +1,7 @@
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
-  name: {{ include "net-istio.fullname" . }}-config.webhook.istio.networking.internal.knative.dev
+  name: config.webhook.istio.networking.internal.knative.dev
   labels:
   {{- include "net-istio.labels" . | nindent 4 }}
 webhooks:
