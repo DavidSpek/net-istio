@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "net-istio.fullname" . }}-net-istio-webhook
+  name: {{ include "net-istio.fullname" . }}-webhook
   labels:
     {{- include "net-istio.labels" . | nindent 4 }}
     {{- include "net-istio.webhookSelectorLabels" . | nindent 4 }}

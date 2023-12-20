@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "net-istio.fullname" . }}-net-istio-controller
+  name: {{ include "net-istio.fullname" . }}-controller
   labels:
     {{- include "net-istio.labels" . | nindent 4 }}
     {{- include "net-istio.controllerSelectorLabels" . | nindent 4 }}
